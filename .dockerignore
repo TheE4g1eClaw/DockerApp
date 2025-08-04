@@ -1,0 +1,8 @@
+node_modules
+ignoracarpeta
+*.log
+dist
+.git
+Dockerfile
+.dockerignore
+.git
