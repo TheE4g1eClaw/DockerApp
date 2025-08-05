@@ -1,25 +1,19 @@
 import { useEffect, useState } from 'react'
-
-import './App.css'
 import axios from 'axios'
+import UserManager from './components/UserManager'
+import './App.css'
 
 function App() {
   const [people, setPeople] = useState([])
-  var handleAddPerson = () => {
-    const name = document.querySelector('input[type="text"]').value
-    const age = document.querySelector('input[type="text"]:nth-child(2)').value
-    if (name && age) {
-      var user = { name, age }
-      axios.post('http://localhost:8000/users', user)
-        .then(response => {
-          setPeople([...people, response.data])
-          document.querySelector('input[type="text"]').value = ''
-          document.querySelector('input[type="text"]:nth-child(2)').value = ''
-        })
-        .catch(error => {
-          console.error("There was an error adding the person!", error);
-        });
-    }
+
+  const handleAddPerson = (userData) => {
+    axios.post('http://localhost:8000/users', userData)
+      .then(response => {
+        setPeople([...people, response.data])
+      })
+      .catch(error => {
+        console.error("There was an error adding the person!", error);
+      });
   }
 
   // Fetch people from the server when the component mounts
@@ -34,26 +28,9 @@ function App() {
   }, [])
 
   return (
-    <>
-    <div>
-      <h1>Hello World</h1>
+    <div className="app">
+      <UserManager people={people} onAddPerson={handleAddPerson} />
     </div>
-    <div>
-      <input type="text" placeholder="Name" />
-      <input type="text" placeholder="Age" />
-      <button className='add-person-button' onClick={handleAddPerson}>Add person</button>
-    </div>
-    <div>
-      <h2>People List</h2>
-          <ul className="people-list">
-            {people.map((person, index) => (
-              <li key={index}>
-                {person.name} - {person.age}
-              </li>
-            ))}
-          </ul>
-    </div>
-    </>
   )
 }
 
